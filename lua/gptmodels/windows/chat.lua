@@ -175,6 +175,12 @@ function M.build_and_mount(selected_text)
     end
   end)
 
+  -- Show models only if openai key
+  has_openai_key = util.ensure_env_var("OPENAI_API_KEY")
+  if not has_openai_key then
+    Store.llm_models.openai = {}
+  end
+
   -- Input window is text with no syntax
   vim.bo[input.bufnr].filetype = 'txt'
   vim.bo[input.bufnr].syntax = ''

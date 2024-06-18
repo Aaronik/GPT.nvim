@@ -107,4 +107,17 @@ describe("util", function()
       assert.is_true(res.text ~= nil)
     end)
   end)
+
+  describe("ensure_env_var", function()
+    it("returns true", function()
+      -- always set
+      local res = util.ensure_env_var("SHELL")
+      assert.is_true(res)
+    end)
+
+    it("returns false", function()
+      local res = util.ensure_env_var("I_DONT_EXIST_WOO")
+      assert.is_false(res)
+    end)
+  end)
 end)

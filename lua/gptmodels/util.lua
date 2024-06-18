@@ -20,7 +20,7 @@ end
 
 -- Log to the file debug.log in the root. File can be watched for easier debugging.
 M.log = function(...)
-  local args = {...}
+  local args = { ... }
 
   -- Canonical log dir
   local data_path = vim.fn.stdpath("data") .. "/gptmodels"
@@ -120,6 +120,12 @@ M.get_visual_selection = function()
   selection.text = text
 
   return selection
+end
+
+---@param env_key string
+---@return boolean
+M.ensure_env_var = function(env_key)
+  return type(os.getenv(env_key)) ~= type(nil)
 end
 
 return M

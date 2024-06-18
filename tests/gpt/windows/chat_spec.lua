@@ -590,7 +590,7 @@ describe("The Chat window", function()
   end)
 
   it("fetches ollama llms when started", function()
-    local first_openai_model = Store.llm_models.openai[1]
+    local first_ollama_model = "your-model"
 
     local fetch_models_stub = stub(ollama, "fetch_models")
 
@@ -608,12 +608,12 @@ describe("The Chat window", function()
     -- their local ollama)
     assert.equal("my-model", Store.llm_model)
 
-    -- Now ensure if we end up on an openai model, we will stay there on subsequent open
-    Store.llm_model = first_openai_model
+    -- Now ensure if we end up on an ollama model, we will stay there on subsequent open
+    Store.llm_model = first_ollama_model
 
     chat_window.build_and_mount()
     assert.stub(fetch_models_stub).was_called(2)
-    assert.equal(first_openai_model, Store.llm_model)
+    assert.equal(first_ollama_model, Store.llm_model)
   end)
 
   it("alerts the user when required programs are not installed", function()
@@ -659,5 +659,4 @@ describe("The Chat window", function()
     local chat_lines = vim.api.nvim_buf_get_lines(chat.chat.bufnr, 0, -1, true)
     assert(util.contains_line(chat_lines, "curl error"))
   end)
-
 end)

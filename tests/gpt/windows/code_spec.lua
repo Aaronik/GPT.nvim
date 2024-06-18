@@ -704,6 +704,35 @@ describe("The code window", function()
     assert.equal(expected_scroll, actual_scroll)
   end)
 
+  it("if no OpenAI key, don't have openai llms", function()
+    -- FIX: Why is this not being populated?
+    local openai_llms = Store.llm_models.openai
+
+    -- set to true, hence should not have anything set
+    local ensure_env_var_stub = stub(util, "ensure_env_var")
+    ensure_env_var_stub.invokes(function()
+      return false
+    end)
+
+    code_window.build_and_mount()
+
+    assert.stub(ensure_env_var_stub).was_called(1)
+    assert.is_true(next(Store.llm_models.openai) == nil)
+
+    -- reset store
+    Store.llm_models.openai = openai_llms
+
+    -- returns true (we have an openai key)
+    ensure_env_var_stub.invokes(function()
+      return true
+    end)
+
+    -- Now, ensure openai models are available
+    code_window.build_and_mount()
+    assert.stub(ensure_env_var_stub).was_called(2)
+    assert.is_true(next(Store.llm_models.openai) ~= nil)
+  end)
+
   it("fetches ollama llms when started", function()
     local first_openai_model = Store.llm_models.openai[1]
 
